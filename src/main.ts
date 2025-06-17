@@ -8,6 +8,8 @@ import { appConfig } from './config';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, new FastifyAdapter());
 
+  app.enableShutdownHooks();
+
   bootstrapSwagger(app);
   bootstrapPipes(app);
 
