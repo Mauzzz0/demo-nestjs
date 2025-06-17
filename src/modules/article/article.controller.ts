@@ -1,11 +1,11 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Query, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation } from '@nestjs/swagger';
 import { UserEntity } from '../../database/entities';
 import { User } from '../../decorators';
 import { AuthGuard } from '../../guards';
 import { IdNumberDto } from '../../shared';
 import { ArticleService } from './article.service';
-import { CreateArticleDto, UpdateArticleDto } from './dto';
+import { CreateArticleDto, FindAllArticlesDto, UpdateArticleDto } from './dto';
 
 @Controller('article')
 export class ArticleController {
@@ -21,7 +21,9 @@ export class ArticleController {
 
   @ApiOperation({ summary: 'Получить список статей' })
   @Get('/')
-  async list() {}
+  async list(@Query() query: FindAllArticlesDto) {
+    return this.articleService.list(query);
+  }
 
   @ApiOperation({ summary: 'Получить статью по id' })
   @Get('/:id')

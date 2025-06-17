@@ -1,17 +1,48 @@
 import { ForbiddenException, Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { FindOptions, Includeable, Op } from 'sequelize';
 import { ArticleEntity, UserEntity } from '../../database/entities';
-import { CreateArticleDto, UpdateArticleDto } from './dto';
+import { CreateArticleDto, FindAllArticlesDto, UpdateArticleDto } from './dto';
 
 @Injectable()
 export class ArticleService {
+  private readonly joinAuthor: Includeable[] = [
+    { model: UserEntity, attributes: { exclude: ['password'] } },
+  ];
+
   constructor(
     @Inject(ArticleEntity.name)
     private readonly articleRepository: typeof ArticleEntity,
   ) {}
 
+  async list(query: FindAllArticlesDto) {
+    const { limit, offset, sortBy, sortDirection, search, authorId } = query;
+
+    const options: FindOptions<ArticleEntity> = {
+      limit,
+      offset,
+      order: [[sortBy, sortDirection]],
+      where: {
+        ...(authorId ? { authorId } : {}),
+      },
+      include: this.joinAuthor,
+    };
+
+    if (search) {
+      const value = `%${search}%`;
+      options.where = {
+        ...options.where,
+        [Op.or]: [{ title: { [Op.iLike]: value } }, { description: { [Op.iLike]: value } }],
+      };
+    }
+
+    const { rows: data, count: total } = await this.articleRepository.findAndCountAll(options);
+
+    return { total, limit, offset, data };
+  }
+
   async getById(id: UserEntity['id']): Promise<ArticleEntity> {
     const article = await this.articleRepository.findByPk(id, {
-      include: [{ model: UserEntity, attributes: { exclude: ['password'] } }],
+      include: this.joinAuthor,
     });
 
     if (!article) {
