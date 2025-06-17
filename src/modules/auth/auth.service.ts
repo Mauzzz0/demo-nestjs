@@ -1,6 +1,6 @@
 import { ConflictException, Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import { compare, hash } from 'bcrypt';
-import { sign } from 'jsonwebtoken';
+import { decode, sign, verify } from 'jsonwebtoken';
 import { appConfig } from '../../config';
 import { UserEntity } from '../../database/entities';
 import { UserService } from '../user/user.service';
@@ -32,6 +32,30 @@ export class AuthService {
     });
 
     return user;
+  }
+
+  verify(token: string, type: 'access' | 'refresh'): boolean {
+    const secrets = {
+      access: appConfig.jwt.accessSecret,
+      refresh: appConfig.jwt.refreshSecret,
+    };
+
+    try {
+      verify(token, secrets[type]);
+      return true;
+    } catch (err) {
+      return false;
+    }
+  }
+
+  decode(token: string): JwtPayload {
+    const decoded = decode(token, { json: true });
+
+    if (!decoded) {
+      throw new UnauthorizedException();
+    }
+
+    return decoded as JwtPayload;
   }
 
   async login(dto: UserLoginDto) {
