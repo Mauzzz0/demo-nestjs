@@ -8,7 +8,7 @@ export class UserEntity extends Model {
     autoIncrement: true,
     allowNull: false,
   })
-  declare public id: number;
+  public id: number;
 
   @Column({
     type: DataType.STRING,

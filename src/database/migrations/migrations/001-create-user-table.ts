@@ -1,7 +1,7 @@
 import { QueryInterface, Transaction } from 'sequelize';
 import { DataType, Sequelize } from 'sequelize-typescript';
-import { wrapWithTransaction } from 'src/database/migrations/transaction-wrapper';
 import { Columns, Tables } from '../dictionary';
+import { wrapWithTransaction } from '../transaction-wrapper';
 
 module.exports = {
   up: wrapWithTransaction(
