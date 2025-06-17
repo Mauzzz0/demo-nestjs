@@ -17,7 +17,7 @@ export class AuthService {
   ) {}
 
   async register(dto: UserRegisterDto) {
-    const exists = await this.userService.getUserByEmail(dto.email);
+    const exists = await this.userService.getByEmail(dto.email);
 
     if (exists) {
       throw new ConflictException(`User already exists`);
@@ -59,7 +59,7 @@ export class AuthService {
   }
 
   async login(dto: UserLoginDto) {
-    const user = await this.userService.getUserByEmail(dto.email);
+    const user = await this.userService.getByEmail(dto.email);
 
     if (!user || !(await compare(dto.password, user.password))) {
       throw new UnauthorizedException();

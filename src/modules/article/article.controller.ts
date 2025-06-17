@@ -1,8 +1,9 @@
-import { Body, Controller, Delete, Get, Post, Put, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation } from '@nestjs/swagger';
 import { UserEntity } from '../../database/entities';
 import { User } from '../../decorators';
 import { AuthGuard } from '../../guards';
+import { IdNumberDto } from '../../shared';
 import { ArticleService } from './article.service';
 import { CreateArticleDto, UpdateArticleDto } from './dto';
 
@@ -31,12 +32,14 @@ export class ArticleController {
   @ApiOperation({ summary: 'Обновить статью' })
   @Put('/:id')
   async update(@User() user: UserEntity, @Body() body: UpdateArticleDto) {
-    return this.articleService.update(user, body);
+    // return this.articleService.update(user, body);
   }
 
   @ApiBearerAuth()
   @UseGuards(AuthGuard)
   @ApiOperation({ summary: 'Удалить статью' })
   @Delete('/:id')
-  async delete() {}
+  async delete(@User() user: UserEntity, @Param() { id }: IdNumberDto) {
+    return this.articleService.delete(user, id);
+  }
 }
