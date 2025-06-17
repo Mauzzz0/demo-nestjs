@@ -12,7 +12,7 @@ const migrationsCount = fs.readdirSync(path.resolve(__dirname, 'migrations')).fi
   return fs.statSync(filePath).isFile();
 }).length;
 
-const src = path.resolve(__dirname, 'template.ts');
+const src = path.resolve(__dirname, 'template.txt');
 const dst = path.resolve(
   __dirname,
   'migrations',

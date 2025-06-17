@@ -1,6 +1,8 @@
-import { Column, DataType, Model, Table } from 'sequelize-typescript';
+import { Column, DataType, HasMany, Model, Table } from 'sequelize-typescript';
+import { Tables } from '../migrations/dictionary';
+import { ArticleEntity } from './article.entity';
 
-@Table({ tableName: 'users' })
+@Table({ tableName: Tables.users })
 export class UserEntity extends Model {
   @Column({
     type: DataType.INTEGER,
@@ -28,4 +30,10 @@ export class UserEntity extends Model {
     allowNull: false,
   })
   public password: string;
+
+  @HasMany(() => ArticleEntity, {
+    as: 'articles',
+    foreignKey: 'authorId',
+  })
+  public articles: ArticleEntity[];
 }

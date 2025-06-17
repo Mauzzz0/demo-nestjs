@@ -1,4 +1,5 @@
 export enum Tables {
+  articles = 'articles',
   users = 'users',
 }
 
@@ -10,4 +11,9 @@ export enum Columns {
   name = 'name',
   email = 'email',
   password = 'password',
+
+  title = 'title',
+  description = 'description',
+
+  authorId = 'authorId',
 }
