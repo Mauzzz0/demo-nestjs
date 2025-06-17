@@ -9,3 +9,11 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgrespassword
       POSTGRES_DB: backend
+
+  redis:
+    container_name: demo-nestjs-redis
+    image: redis:7-alpine
+    command: redis-server --requirepass redispassword
+    restart: unless-stopped
+    ports:
+      - "6399:6379"
