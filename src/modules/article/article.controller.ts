@@ -25,14 +25,20 @@ export class ArticleController {
 
   @ApiOperation({ summary: 'Получить статью по id' })
   @Get('/:id')
-  async index() {}
+  async index(@Param() { id }: IdNumberDto) {
+    return this.articleService.getById(id);
+  }
 
   @ApiBearerAuth()
   @UseGuards(AuthGuard)
   @ApiOperation({ summary: 'Обновить статью' })
   @Put('/:id')
-  async update(@User() user: UserEntity, @Body() body: UpdateArticleDto) {
-    // return this.articleService.update(user, body);
+  async update(
+    @Param() { id }: IdNumberDto,
+    @User() user: UserEntity,
+    @Body() body: UpdateArticleDto,
+  ) {
+    return this.articleService.update(id, user, body);
   }
 
   @ApiBearerAuth()
