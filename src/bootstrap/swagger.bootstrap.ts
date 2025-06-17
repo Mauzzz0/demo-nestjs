@@ -6,7 +6,7 @@ export const bootstrapSwagger = (app: INestApplication) => {
 
   const config = new DocumentBuilder()
     .setTitle(title)
-    .setVersion(process.env.npm_package_version)
+    .setVersion(process.env.npm_package_version ?? '0.0.1')
     .addBearerAuth()
     .build();
 
