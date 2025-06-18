@@ -35,7 +35,9 @@ export class AuthService {
       password: dto.password,
     });
 
-    return user;
+    const { password, ...rest } = user;
+
+    return rest;
   }
 
   public verify(token: string, type: 'access' | 'refresh'): boolean {

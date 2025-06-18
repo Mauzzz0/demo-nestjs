@@ -82,11 +82,13 @@ export class ArticleService {
   }
 
   async create(user: UserEntity, dto: CreateArticleDto) {
-    return this.articleRepository.create({
+    const article = await this.articleRepository.create({
       title: dto.title,
       description: dto.description,
       authorId: user.id,
     });
+
+    return this.getById(article.id);
   }
 
   async update(id: ArticleEntity['id'], user: UserEntity, dto: UpdateArticleDto) {
