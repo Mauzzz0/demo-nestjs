@@ -1,8 +1,9 @@
-import { Inject, Module, OnApplicationShutdown } from '@nestjs/common';
+import { Global, Inject, Module, OnApplicationShutdown } from '@nestjs/common';
 import { RedisClientType } from '@redis/client';
 import { REDIS, redisProvider } from './cache.provider';
 import { CacheService } from './cache.service';
 
+@Global()
 @Module({
   providers: [CacheService, redisProvider],
   exports: [CacheService, redisProvider],
@@ -18,7 +19,5 @@ export class CacheModule implements OnApplicationShutdown {
    */
   async onApplicationShutdown() {
     await this.redis.close();
-
-    this.redis.destroy();
   }
 }
