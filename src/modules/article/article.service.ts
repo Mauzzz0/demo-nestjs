@@ -98,17 +98,20 @@ export class ArticleService {
       throw new ForbiddenException('You are not allowed to update this article');
     }
 
-    await article.update({
-      title: dto.title,
-      description: dto.description,
-    });
+    await this.articleRepository.update(
+      {
+        title: dto.title,
+        description: dto.description,
+      },
+      { where: { id } },
+    );
 
     await Promise.all([
       this.cacheService.delete(cacheArticleById(id)),
       this.cacheService.deleteForPattern(cacheArticlesList('*')),
     ]);
 
-    return article;
+    return this.getById(id);
   }
 
   async delete(user: UserEntity, id: ArticleEntity['id']) {
